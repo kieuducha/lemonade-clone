@@ -1,6 +1,6 @@
 workflows:
-  ios-simulator:
-    name: Lemonade Tycoon iOS Simulator Build (No Signing Required)
+  ios-unsigned-device:
+    name: Lemonade Tycoon iOS Unsigned Device Build (For Sideloadly/Windows)
     max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
@@ -23,11 +23,12 @@ workflows:
       - name: Sync Capacitor platform
         script: |
           npx cap sync ios
-      - name: Build simulator app (No codesign)
+      - name: Build unsigned device app
         script: |
-          xcodebuild -project "$XCODE_PROJECT" -scheme "$XCODE_SCHEME" -configuration Debug -sdk iphonesimulator -derivedDataPath build clean build CODE_SIGNING_ALLOWED=NO
+          # Build targeting real iOS devices (iphoneos) but bypass signing
+          xcodebuild -project "$XCODE_PROJECT" -scheme "$XCODE_SCHEME" -configuration Release -sdk iphoneos -derivedDataPath build clean build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
     artifacts:
-      - build/Build/Products/Debug-iphonesimulator/*.app
+      - build/Build/Products/Release-iphoneos/*.app
 
   ios-release:
     name: Lemonade Tycoon iOS Release Build (Requires Apple Developer Signing)
