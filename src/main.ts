@@ -41,6 +41,11 @@ const config: Types.Core.GameConfig = {
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 1024,
+        height: 768,
+    },
+    input: {
+        activePointers: 3, // Support multi-touch on mobile
     },
     scene: [Boot, Preloader, MainGame, GameOver, DayScene],
 };
