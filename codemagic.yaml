@@ -23,9 +23,6 @@ workflows:
       - name: Sync Capacitor platform
         script: |
           npx cap sync ios
-      - name: Install CocoaPods dependencies
-        script: |
-          cd ios/App && pod install
       - name: Build simulator app (No codesign)
         script: |
           xcodebuild -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -configuration Debug -sdk iphonesimulator -derivedDataPath build clean build CODE_SIGNING_ALLOWED=NO
@@ -59,9 +56,6 @@ workflows:
       - name: Sync Capacitor platform
         script: |
           npx cap sync ios
-      - name: Install CocoaPods dependencies
-        script: |
-          cd ios/App && pod install
       - name: Set up code signing
         script: |
           # Automatically uses provisioning profiles uploaded in Codemagic UI
