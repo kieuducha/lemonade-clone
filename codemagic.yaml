@@ -25,10 +25,16 @@ workflows:
           npx cap sync ios
       - name: Build unsigned device app
         script: |
-          # Build targeting real iOS devices (iphoneos) but bypass signing
           xcodebuild -project "$XCODE_PROJECT" -scheme "$XCODE_SCHEME" -configuration Release -sdk iphoneos -derivedDataPath build clean build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+      - name: Package .app into .ipa
+        script: |
+          # Create Payload folder structure required by iOS .ipa format
+          mkdir -p Payload
+          cp -r "build/Build/Products/Release-iphoneos/App.app" Payload/
+          zip -r Lemonade.ipa Payload
+          echo "IPA created: Lemonade.ipa"
     artifacts:
-      - build/Build/Products/Release-iphoneos/*.app
+      - Lemonade.ipa
 
   ios-release:
     name: Lemonade Tycoon iOS Release Build (Requires Apple Developer Signing)
