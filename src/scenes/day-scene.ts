@@ -24,9 +24,10 @@ import { getTooExpensiveReview, getTooLongQueueReview } from "../data/reviewText
 import Reviews, { Review } from "../models/reviews";
 import TodaySettingContainer from "../ui/today-setting-container";
 
-const MAP_POSITION = { x: 515, y: 194 };
-const MAP_SIZE = { width: 480, height: 384 };
-const LEMONADE_STAND_POSITION = { x: 512 + 188, y: 194 + 200 };
+// Portrait layout – map starts at (0, 115)
+const MAP_POSITION = { x: 0, y: 115 };
+const MAP_SIZE = { width: 430, height: 320 };
+const LEMONADE_STAND_POSITION = { x: 0 + 185, y: 115 + 200 };
 
 const CHARACTER_SPRITE_SIZE = 16;
 const TOTAL_CHARACTER_SPRITES = 20;
@@ -131,32 +132,40 @@ export class DayScene extends Scene {
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor("rgb(24, 174, 49)");
 
-        this.supplyStatusContainer = new SupplyStatusContainer(this, 50, 25, this.supplies, this.lemonadePitcher);
-        this.budgetContainer = new BudgetContainer(this, 900, 16, this.budget);
-        this.performanceContainer = new PerformanceContainer(this, 0, 194, this.todayResult, this.reviews);
-        this.todaySettingContainer = new TodaySettingContainer(
-            this,
-            0,
-            388,
-            this.rentedLocation,
-            this.price,
-            this.recipe
-        );
+        // ── Top bar (y=0..55) ─────────────────────────────────────────────
+        this.camera.scene.add.rectangle(0, 0, 430, 55, 0x006620).setOrigin(0, 0);
+        this.supplyStatusContainer = new SupplyStatusContainer(this, 8, 10, this.supplies, this.lemonadePitcher);
+        this.budgetContainer = new BudgetContainer(this, 340, 8, this.budget);
+
+        // ── Weather bar (y=55..115) ───────────────────────────────────────
         this.weatherNewsContainer = new WeatherNewsContainer(
             this,
-            512,
-            64,
+            0,
+            55,
             this._date,
             this.weatherForecast,
             this.news,
             true
         );
 
+        // ── Map zone (y=115..435) ─────────────────────────────────────────
         const map = this.make.tilemap({ key: "park-map" });
         const tileset = map.addTilesetImage("tilemap_packed", "tiles");
-        this.mapContainer = new MapContainer(this, 512, 194, map, tileset, this.rentedLocation);
+        this.mapContainer = new MapContainer(this, 0, 115, map, tileset, this.rentedLocation);
 
-        this.skipButton = new TextButton(this, 950, 555, "SKIP");
+        // ── Control panel (y=435..932) ────────────────────────────────────
+        this.performanceContainer = new PerformanceContainer(this, 0, 435, this.todayResult, this.reviews);
+        this.todaySettingContainer = new TodaySettingContainer(
+            this,
+            0,
+            620,
+            this.rentedLocation,
+            this.price,
+            this.recipe
+        );
+
+        // Skip button – bottom right
+        this.skipButton = new TextButton(this, 340, 890, "SKIP");
         this.skipButton.on("pointerdown", () => {
             this._date.setToNextDay();
             this.switchToPreparationScene();

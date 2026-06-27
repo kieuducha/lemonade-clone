@@ -23,21 +23,21 @@ export class SupplyStatusContainer extends Phaser.GameObjects.Container {
         this.supplies = supplies;
         this.lemonadePitcher = lemonadePitcher;
 
-        this.lemonImage = scene.add.image(0, 12, "lemon");
-        this.lemonText = new TitleText(scene, 30, 0, this.supplies.lemon.toString());
+        this.lemonImage = scene.add.image(0, 14, "lemon");
+        this.lemonText = new TitleText(scene, 26, 2, this.supplies.lemon.toString());
 
-        this.sugarImage = scene.add.image(100, 12, "sugar");
-        this.sugarText = new TitleText(scene, 130, 0, this.supplies.sugar.toString());
+        this.sugarImage = scene.add.image(75, 14, "sugar");
+        this.sugarText = new TitleText(scene, 101, 2, this.supplies.sugar.toString());
 
-        this.iceImage = scene.add.image(200, 12, "ice");
-        this.iceText = new TitleText(scene, 230, 0, this.supplies.ice.toString());
+        this.iceImage = scene.add.image(150, 14, "ice");
+        this.iceText = new TitleText(scene, 176, 2, this.supplies.ice.toString());
 
-        this.cupImage = scene.add.image(300, 12, "cup");
-        this.cupText = new TitleText(scene, 330, 0, this.supplies.cup.toString());
+        this.cupImage = scene.add.image(225, 14, "cup");
+        this.cupText = new TitleText(scene, 251, 2, this.supplies.cup.toString());
 
         if (this.lemonadePitcher) {
-            this.lemonadePitcherImage = scene.add.image(400, 12, "lemonade-pitcher");
-            this.lemonadePitcherText = new TitleText(scene, 430, 0, this.lemonadePitcher.amount.toString());
+            this.lemonadePitcherImage = scene.add.image(300, 14, "lemonade-pitcher");
+            this.lemonadePitcherText = new TitleText(scene, 326, 2, this.lemonadePitcher.amount.toString());
             this.lemonadePitcher.on("change", (amount: number) => {
                 this.lemonadePitcherText.setText(amount.toString());
             });

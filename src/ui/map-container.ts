@@ -29,33 +29,15 @@ export default class MapContainer extends Phaser.GameObjects.Container {
         const locationKey = this.location.getCurrentLocationKey();
         const { title, description } = LOCATIONS_DATA[locationKey];
 
-        this.locationTitleText = new TitleText(scene, paddingLeft, 384 + 12, title);
-
-        this.locationDetailText = new Phaser.GameObjects.Text(scene, paddingLeft, 384 + 40, description, {
-            fontSize: "12px",
-        });
-
-        const popularity = this.location.getPopularity(locationKey);
-        const satisfaction = this.location.getSatisfaction(locationKey);
-        this.locationPopularityText = new Phaser.GameObjects.Text(
-            scene,
-            paddingLeft,
-            384 + 120,
-            `Popularity: ${popularity}`,
-            {
-                fontSize: "12px",
-            }
-        );
-
-        this.locationSatisfactionText = new Phaser.GameObjects.Text(
-            scene,
-            paddingLeft + 192,
-            384 + 120,
-            `Satisfaction: ${satisfaction}`,
-            {
-                fontSize: "12px",
-            }
-        );
+        // Location info is shown in the Rent tab – skip standalone text here
+        this.locationTitleText = new TitleText(scene, 0, 0, title);
+        this.locationTitleText.setVisible(false);
+        this.locationDetailText = new Phaser.GameObjects.Text(scene, 0, 0, description, { fontSize: "12px" });
+        this.locationDetailText.setVisible(false);
+        this.locationPopularityText = new Phaser.GameObjects.Text(scene, 0, 0, `Popularity: ${popularity}`, { fontSize: "12px" });
+        this.locationPopularityText.setVisible(false);
+        this.locationSatisfactionText = new Phaser.GameObjects.Text(scene, 0, 0, `Satisfaction: ${satisfaction}`, { fontSize: "12px" });
+        this.locationSatisfactionText.setVisible(false);
 
         this.location.on("locationChanged", (locationKey: number) => {
             const { title, description } = LOCATIONS_DATA[locationKey];
@@ -66,7 +48,7 @@ export default class MapContainer extends Phaser.GameObjects.Container {
             this.locationPopularityText.setText(`Popularity: ${popularity}`);
             this.locationSatisfactionText.setText(`Satisfaction: ${satisfaction}`);
         });
-        this.background = scene.add.rectangle(0, 0, 488, 384 + 160, 0x008229, 1);
+        this.background = scene.add.rectangle(0, 0, 430, 320, 0x008229, 1);
         this.background.setOrigin(0, 0);
 
         this.add([
@@ -89,8 +71,9 @@ export default class MapContainer extends Phaser.GameObjects.Container {
 
     loadMap() {
         if (this.tileset) {
-            const mapX = 516;
-            const mapY = 198;
+            // Portrait layout: map occupies y=115 zone (absolute screen coords)
+            const mapX = 0;
+            const mapY = 115;
             this.map.createLayer("Tile Layer 1", this.tileset)?.setPosition(mapX, mapY);
             this.map.createLayer("Tile Layer 2", this.tileset)?.setPosition(mapX, mapY);
             this.map.createLayer("Tile Layer 3", this.tileset)?.setPosition(mapX, mapY);

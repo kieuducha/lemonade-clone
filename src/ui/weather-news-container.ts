@@ -25,42 +25,37 @@ export default class WeatherNewsContainer extends Phaser.GameObjects.Container {
     ) {
         super(scene, x, y);
 
-        const padding = 16;
+        const pad = 10;
 
-        this.date = scene.add.text(0 + padding, 0 + padding, _date.getDateString(), { fontSize: "16px" });
-        this.news = scene.add.text(244, 32 + padding, news, { fontSize: "12px" });
-        this.todayTemperature = scene.add.text(0 + padding, 24 + padding, this.getTodayTemperature(weatherForecast), {
-            fontSize: "16px",
+        // Date label – top left
+        this.date = scene.add.text(pad, 8, _date.getDateString(), { fontSize: "14px", color: "#ffffff" });
+
+        // Temperature – below date
+        this.todayTemperature = scene.add.text(pad, 30, this.getTodayTemperature(weatherForecast), {
+            fontSize: "12px",
+            color: "#eeeeee",
         });
 
-        this.morningAtmosphereImage = scene.add.image(
-            16 + padding,
-            72 + padding,
-            this.getAtmosphereImage(weatherForecast.morning)
-        );
-        this.afternoonAtmosphereImage = scene.add.image(
-            80 + padding,
-            72 + padding,
-            this.getAtmosphereImage(weatherForecast.afternoon)
-        );
-        this.eveningAtmosphereImage = scene.add.image(
-            144 + padding,
-            72 + padding,
-            this.getAtmosphereImage(weatherForecast.evening)
-        );
+        // Weather icons – right side, vertically centered
+        this.morningAtmosphereImage = scene.add.image(260, 30, this.getAtmosphereImage(weatherForecast.morning));
+        this.afternoonAtmosphereImage = scene.add.image(300, 30, this.getAtmosphereImage(weatherForecast.afternoon));
+        this.eveningAtmosphereImage = scene.add.image(340, 30, this.getAtmosphereImage(weatherForecast.evening));
 
-        const backgroundWidth = 488;
-        const backgroundHeight = 120;
-        this.background = scene.add.rectangle(0, 0, backgroundWidth, backgroundHeight, 0x008229, 1);
+        // News is hidden in portrait (not enough space); keep the property for compatibility
+        this.news = scene.add.text(0, 0, "", { fontSize: "10px" }).setVisible(false);
+
+        // Background – full width strip
+        this.background = scene.add.rectangle(0, 0, 430, 60, 0x008229, 1);
         this.background.setOrigin(0, 0);
+
         this.add([
             this.background,
             this.date,
-            this.news,
             this.todayTemperature,
             this.morningAtmosphereImage,
             this.afternoonAtmosphereImage,
             this.eveningAtmosphereImage,
+            this.news,
         ]);
         scene.add.existing(this);
     }

@@ -34,18 +34,18 @@ WebFont.load({
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    width: 1024,
-    height: 768,
+    width: 430,
+    height: 932,
     parent: "game-container",
     backgroundColor: "#18ae31",
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 1024,
-        height: 768,
+        width: 430,
+        height: 932,
     },
     input: {
-        activePointers: 3, // Support multi-touch on mobile
+        activePointers: 3,
     },
     scene: [Boot, Preloader, MainGame, GameOver, DayScene],
 };

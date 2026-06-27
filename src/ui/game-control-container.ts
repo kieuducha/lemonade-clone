@@ -73,7 +73,7 @@ export class GameControlContainer extends Phaser.GameObjects.Container {
         this.buySuppliesContainer = new BuySuppliesContainer(scene, marginLeft + padding, 64, this.purchaseSupplies);
         this.recipeContainer = new RecipeContainer(scene, marginLeft + padding, 64, this.supplies, recipe);
 
-        this.tabItemsBackgroundContainer = scene.add.rectangle(marginLeft, 50, 488, 384, 0x009631, 1);
+        this.tabItemsBackgroundContainer = scene.add.rectangle(marginLeft, 50, 430 - marginLeft, 460, 0x009631, 1);
         this.tabItemsBackgroundContainer.setOrigin(0, 0);
         this.add([
             this.tabItemsBackgroundContainer,

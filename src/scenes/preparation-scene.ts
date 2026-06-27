@@ -104,17 +104,32 @@ export class PreparationScene extends Scene {
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor("rgb(24, 174, 49)");
 
+        // ── Top bar (y=0..55): dark strip ─────────────────────────────────
+        this.camera.scene.add.rectangle(0, 0, 430, 55, 0x006620).setOrigin(0, 0);
+
         this.loadBgm();
 
         const weatherForecast = this.getWeatherForecast({ isCelsius: true });
         const news = this.getNews();
 
-        this.supplyStatusContainer = new SupplyStatusContainer(this, 50, 25, this.supplies);
-        this.budgetContainer = new BudgetContainer(this, 900, 16, this.budget);
+        // Supplies row – top-left of top bar
+        this.supplyStatusContainer = new SupplyStatusContainer(this, 8, 10, this.supplies);
+        // Budget – top-right
+        this.budgetContainer = new BudgetContainer(this, 340, 8, this.budget);
+
+        // ── Weather bar (y=55..115) ────────────────────────────────────────
+        this.weatherNewsContainer = new WeatherNewsContainer(this, 0, 55, this._date, weatherForecast, news, true);
+
+        // ── Map zone (y=115..435) ─────────────────────────────────────────
+        const map = this.make.tilemap({ key: "park-map" });
+        const tileset = map.addTilesetImage("tilemap_packed", "tiles");
+        this.mapContainer = new MapContainer(this, 0, 115, map, tileset, this.rentedLocation);
+
+        // ── Control panel (y=435..932) ────────────────────────────────────
         this.gameControlUI = new GameControlContainer(
             this,
             0,
-            144,
+            435,
             this.price,
             this.budget,
             this.supplies,
@@ -122,22 +137,16 @@ export class PreparationScene extends Scene {
             this.recipe,
             this.yesterdayResult
         );
-        this.weatherNewsContainer = new WeatherNewsContainer(this, 512, 64, this._date, weatherForecast, news, true);
-        const map = this.make.tilemap({ key: "park-map" });
-        const tileset = map.addTilesetImage("tilemap_packed", "tiles");
-        this.mapContainer = new MapContainer(this, 512, 194, map, tileset, this.rentedLocation);
 
-        this.startButton = new TextButton(this, 410, 700, "START GAME");
+        // Start button near bottom
+        this.startButton = new TextButton(this, 215, 890, "START GAME");
         this.startButton.setInteractive();
         this.startButton.on("pointerdown", () => {
-            // Check if the player has enough money to rent the location
             if (this.budget.amount < this.rentedLocation.getFee()) {
                 alert("You don't have enough money to rent the location.");
                 return;
             }
-            // Create a new instance of the DayScene
             const dayScene = new DayScene(`day-${this._date.getDateString()}`);
-            // // Add the new instance to the scene manager
             const data: GameDataFromPreparationScene = {
                 budget: this.budget,
                 supplies: this.supplies,
@@ -158,7 +167,6 @@ export class PreparationScene extends Scene {
     }
 
     loadBgm() {
-        // add bgm and play it
         if (!this.sound.get("bgm")) {
             this.bgm = this.sound.add("bgm", { loop: true, volume: 0.5 });
             const isBgmPaused = this.registry.get("bgmPaused");
@@ -168,11 +176,10 @@ export class PreparationScene extends Scene {
             }
             this.bgm.play();
         }
-        // add speaker image
+        // Speaker button – top-right corner of portrait top bar
         this.speakerButton = this.add
-            .image(50, 718, this.registry.get("bgmPaused") ? "speaker-mute-32" : "speaker-32")
+            .image(400, 28, this.registry.get("bgmPaused") ? "speaker-mute-32" : "speaker-32")
             .setInteractive({ cursor: "pointer" });
-        // add event listener to speaker image
         this.speakerButton.on("pointerdown", () => {
             const isBgmPaused = this.registry.get("bgmPaused");
             if (isBgmPaused) {
